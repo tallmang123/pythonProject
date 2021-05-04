@@ -1,6 +1,7 @@
 from app import db
+import datetime
 
-
+#use sqlalchemy
 class Account(db.Model):
     __tablename__ = 'account'
     Seq = db.Column(db.Integer, primary_key=True)
@@ -16,5 +17,14 @@ class Account(db.Model):
         self.Salt = salt,
         self.Status = status,
         self.AddTime = addtime
+
+    def as_dict(self):
+        dict = {}
+        for c in self.__table__.columns:
+            dict[c.name] = getattr(self, c.name)
+            if isinstance(dict[c.name], datetime.datetime): # convert type datetime to string
+                dict[c.name] = dict[c.name].strftime('%Y-%m-%d %H:%M:%S')
+        return dict
+        #return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 

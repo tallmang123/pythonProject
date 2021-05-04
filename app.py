@@ -16,10 +16,13 @@ configPath = 'project/config/'+env+'.py'
 app = Flask(__name__)
 app.config.from_pyfile(configPath) #Set Config
 
+#use flask_restx
 api = Api(app)
+#use SQLAlchemy
 db = SQLAlchemy(app)
 
+from project.common.ErrorCode import ErrorCode
+from project.common.ErrorHandler import *
 from project.controller.api import *
 from project.controller.web import *
-
 

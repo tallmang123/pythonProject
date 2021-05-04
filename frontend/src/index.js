@@ -5,11 +5,16 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route } from 'react-router-dom';
 import First from './First';
 import Second from './Second';
+import Member from './Member';
+import axios from 'axios'
+
+import 'bootstrap/dist/css/bootstrap.css';
 
 ReactDOM.render(
     <BrowserRouter>
-        <Route exact path='/first' component={ First } />
-        <Route exact path='/second' component={ Second } />
+        <Route path='/first' component={ First } />
+        <Route path='/second' component={ Second } />
+        <Route path='/member' component={ Member } />
     </BrowserRouter>
     , document.getElementById('root')
 );
