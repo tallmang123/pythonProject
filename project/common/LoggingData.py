@@ -6,6 +6,7 @@ from datetime import datetime
 from flask import request
 
 import logging
+import json
 
 
 # 데이터 로깅
@@ -30,18 +31,24 @@ class LoggingData:
             print('*******************path error')
             os.mkdir(log_path)
 
-    def writeApiSuccessLog(self, errorCode, requestData, responseData):
+    def writeApiSuccessLog(self, requestData, responseJson):
 
+        # 날짜 생성
         logDate = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # 요청 url
         url = request.url
-        if requestData is None:
-            if request.method == 'GET':
-                requestData = request.param
-            else:
-                requestData = request.json
 
-        logData = LogData(logDate, url, errorCode, requestData, responseData)
+        # 응답 에러코드
+        try:
+            errorCode = responseJson['code']
+        except:
+            errorCode = ErrorCode.INVALID_CODE.errorCode
 
+        # log data set
+        logData = LogData(logDate, url, errorCode, requestData, responseJson)
+
+        # logging
         if errorCode == ErrorCode.SUCCESS.errorCode:
             logging.info(logData.__dict__)
         else:
