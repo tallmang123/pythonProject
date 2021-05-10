@@ -1,5 +1,7 @@
 from app import api
 from flask_restx import fields, Resource, reqparse
+
+from project.common.AuthException import AuthException
 from project.common.ErrorCode import ErrorCode
 from project.service.AccountService import AccountService
 
@@ -63,8 +65,12 @@ class Auth(Resource):
         password = args['password']
 
         if userId is None or password is None:
-            res = {'code': ErrorCode.INVALID_PARAMETER.errorCode, 'msg': ErrorCode.INVALID_PARAMETER.errorMsg}
-            return res
+            raise AuthException(ErrorCode.INVALID_PARAMETER.errorCode, ErrorCode.INVALID_PARAMETER.errorMsg)
+
+        accountInfo = AccountService().getAccountInfoById(userId)
+        print(accountInfo)
+        if accountInfo is not None:
+            raise AuthException(ErrorCode.DUPLICATED_ACCOUNT.errorCode, ErrorCode.DUPLICATED_ACCOUNT.errorMsg)
 
         accountInfo = AccountService().addAccount(userId, password)
         res = {'code': ErrorCode.SUCCESS.errorCode, 'msg': ErrorCode.SUCCESS.errorMsg, 'data': accountInfo}
