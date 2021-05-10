@@ -6,6 +6,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import First from './First';
 import Second from './Second';
 import Member from './Member';
+import AddData from './AddData';
 import axios from 'axios'
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -15,6 +16,7 @@ ReactDOM.render(
         <Route path='/first' component={ First } />
         <Route path='/second' component={ Second } />
         <Route path='/member' component={ Member } />
+        <Route path='/addData' component={ AddData } />
     </BrowserRouter>
     , document.getElementById('root')
 );

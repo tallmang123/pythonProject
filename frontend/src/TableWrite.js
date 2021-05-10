@@ -5,8 +5,11 @@ function TableWrite({ columns, datas }) {
   console.log("===================tablewrite=================");
   console.log(columns);
   console.log(datas);
+  datas.map((data) => (
+    console.log(data)
+  ));
   return (
-    <Table striped bordered hover>
+    <Table responsive striped bordered hover>
         <thead>
             <tr>
                 {columns.map((column) => (
@@ -17,6 +20,7 @@ function TableWrite({ columns, datas }) {
         <tbody>
             {datas.map(data => (
                 <tr key={data.Seq}>
+                    <td>{data.Seq}</td>
                     <td>{data.Id}</td>
                     <td>{data.Password}</td>
                     <td>{data.Salt}</td>

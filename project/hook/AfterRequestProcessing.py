@@ -12,7 +12,7 @@ def after_request(response):
         requestData = request.query_string
     else:
         requestData = request.json
-    print(requestData)
+
     # CORS 정책으로 인해 options 타입으로 들어오는 경우가 있어 예외처리
     # @todo : option으로 처리할수 있는지 확인 필요
     if request.method != 'OPTIONS':
