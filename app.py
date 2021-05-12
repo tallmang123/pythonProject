@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_restx import Api
 from flask_cors import CORS
@@ -24,6 +24,7 @@ CORS(app)
 
 # use flask_restx
 api = Api(app)
+
 # use SQLAlchemy
 db = SQLAlchemy(app)
 
@@ -31,4 +32,3 @@ db = SQLAlchemy(app)
 from project.common import *
 from project.hook import *
 from project.controller.api import *
-from project.controller.web import *

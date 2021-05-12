@@ -46,15 +46,14 @@ class Auth(Resource):
     @api.marshal_with(responseBody)  # response model set
     def get(self, **kwargs):
         args = requestGetParser.parse_args()
-        print(args)
         userId = args['id']
-        if userId is None:
+        if not userId:
             accountInfo = AccountService().getAccountInfo()
         else:
             accountInfo = AccountService().getAccountInfoById(userId)
 
         res = {'code': ErrorCode.SUCCESS.errorCode, 'msg': ErrorCode.SUCCESS.errorMsg, 'data': accountInfo}
-        print(res)
+
         return res
 
     @api.expect(requestPostParser)  # request body parsing
@@ -64,12 +63,11 @@ class Auth(Resource):
         userId = args['id']
         password = args['password']
 
-        if userId is None or password is None:
+        if not userId or not password:
             raise AuthException(ErrorCode.INVALID_PARAMETER.errorCode, ErrorCode.INVALID_PARAMETER.errorMsg)
 
         accountInfo = AccountService().getAccountInfoById(userId)
-        print(accountInfo)
-        if accountInfo is not None:
+        if accountInfo:
             raise AuthException(ErrorCode.DUPLICATED_ACCOUNT.errorCode, ErrorCode.DUPLICATED_ACCOUNT.errorMsg)
 
         accountInfo = AccountService().addAccount(userId, password)

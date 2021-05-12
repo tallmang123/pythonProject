@@ -8,6 +8,7 @@ import Second from './Second';
 import Member from './Member';
 import AddData from './AddData';
 import axios from 'axios'
+import './lang/i18n';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
