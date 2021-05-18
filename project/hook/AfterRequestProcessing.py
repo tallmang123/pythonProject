@@ -17,7 +17,7 @@ def after_request(response):
     # @todo : option으로 처리할수 있는지 확인 필요
     if request.method != 'OPTIONS':
         # 요청 처리 이후 데이터 로깅 일괄 처리
-        LoggingData().writeApiSuccessLog(requestData, response.get_json())
+        LoggingData().writeApiLog(requestData, response.get_json())
     return response
 
 

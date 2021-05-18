@@ -41,7 +41,7 @@ responseBody = api.model('ResponseBody', {
 # 아래와 같이 하나의 클래스(url)에서 전송타입(get,post,delete ... ) 등으로 기능을 구분할 경우 각 타입에 맞는 기능 정의를 명확하게 하는것이 안전함
 # get =  조회 , post = 데이터 insert , put = 데이터 update , delete = 데이터 삭제
 @api.route('/auth/info')
-class Auth(Resource):
+class Account(Resource):
     @api.expect(requestGetParser)  # request body parsing
     @api.marshal_with(responseBody)  # response model set
     def get(self, **kwargs):

@@ -34,6 +34,6 @@ def serverErrorHandler(exception):
     else:
         requestData = request.json
 
-    LoggingData().writeApiSuccessLog(requestData, responseData)
+    LoggingData().writeApiLog(requestData, responseData)
 
     return responseData

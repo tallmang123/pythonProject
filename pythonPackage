@@ -3,3 +3,5 @@ flask_sqlalchemy
 flask_restx
 pymysql
 flask_cors
+flask-login
+redis
