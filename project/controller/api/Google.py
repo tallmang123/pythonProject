@@ -106,7 +106,7 @@ def logout():
 
 #로그인했던 유저 정보를 가져옴
 #기본 정보는 레디스에 저장했지만 UserMixin 자체는 Flask를 통해 메모리레 로드되어있는 상태이므로 Flask가 구동되는한 계속해서 유지됨.
-#@Todo Flask가 종료되면 정보가 사라지기 때문에 처리 방식에 대한 다른 고민이 필요함
+#Todo Flask가 종료되면 정보가 사라지기 때문에 처리 방식에 대한 다른 고민이 필요함
 @login_manager.user_loader
 def load_user(googleId):
     print('*************user_loader' + googleId)
