@@ -19,21 +19,20 @@ class LoggingData:
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(LoggingData, cls).__new__(cls)
+            # 객체 최초 생성시 log 설정 불러옴
+            # logging에서 기본 에러레벨은 WARNING
+            # DEBUG < INFO < WARNING < ERROR < CRITICAL 순
+            dirPath = os.path.dirname(os.path.realpath(__file__)).replace('\\', '/') + '/'
+            config = json.load(open(dirPath + '../config/logConfig.json'))
+            logging.config.dictConfig(config)
         return cls.instance
 
     # init : 소스상에서 원하는대로 객체 생성요청하여 커스터마이징하는 경우에 실행
     # init , new 중 new가 먼저 실행되어 객체를 메모리에 할당한 후에 init 진입
     def __init__(self):
-        # logging에서 기본 에러레벨은 WARNING
-        # DEBUG < INFO < WARNING < ERROR < CRITICAL 순에서 WARNING 하위는 출력되지 않음
-
-        dir = os.path.dirname(os.path.realpath(__file__)).replace('\\', '/') + '/'
-        config = json.load(open(dir + '../config/logConfig.json'))
-        logging.config.dictConfig(config)
-
+        # 객체가 생성될때 log 경로 확인
         log_path = '/Users/tallmang/Desktop/HIVE/pythonProject/logs'
         if not os.path.exists(log_path):
-            print('*******************path error')
             os.mkdir(log_path)
 
     def writeApiLog(self, requestData, responseJson):
