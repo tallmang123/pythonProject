@@ -23,7 +23,6 @@ client = WebApplicationClient(app.config['GOOGLE_CLIENT_ID'])
 
 @app.route("/index")
 def index():
-    print("index")
     print(current_user)
     if current_user.is_authenticated:
         return (
@@ -31,7 +30,7 @@ def index():
             "<div><p>당신의 구글 프로필 사진 : </p>"
             '<img src="{}" alt="Google profile pic"></img></div>'
             '<a class="button" href="/logout">로그아웃하기</a>'.format(
-                current_user.id, current_user.email, current_user.picture
+                current_user.name, current_user.email, current_user.picture
             )
         )
     else:
@@ -45,7 +44,6 @@ def login():
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
 
     # 위의 로그인 url에 oauth 인증시 필요한 scope, redirect_uri 를 추가하여 oauth 요청 url 정의함.
-    # scopes that let you retrieve user's profile from Google
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
         redirect_uri=request.base_url + "/callback",
@@ -80,9 +78,7 @@ def callback():
 
     client.parse_request_body_response(json.dumps(token_response.json()))
 
-    # Now that we have tokens (yay) let's find and hit URL
-    # from Google that gives you user's profile information,
-    # including their Google Profile Image and Email
+    # 발급된 토큰을 이용해서 구글 유저 정보를 가져옴
     userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
     uri, headers, body = client.add_token(userinfo_endpoint)
     userinfo_response = requests.get(uri, headers=headers, data=body)
@@ -98,7 +94,7 @@ def callback():
     RedisLibrary().set(googleId, json.dumps(googleUser, default=lambda x: x.__dict__))
 
     login_user(googleUser)
-    # Send user back to homepage
+    # 페이지 리다이렉트
     return redirect(url_for("index"))
 
 
@@ -108,7 +104,9 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
-
+#로그인했던 유저 정보를 가져옴
+#기본 정보는 레디스에 저장했지만 UserMixin 자체는 Flask를 통해 메모리레 로드되어있는 상태이므로 Flask가 구동되는한 계속해서 유지됨.
+#@Todo Flask가 종료되면 정보가 사라지기 때문에 처리 방식에 대한 다른 고민이 필요함
 @login_manager.user_loader
 def load_user(googleId):
     print('*************user_loader' + googleId)
