@@ -10,7 +10,7 @@
   "handlers": {
     "console": {
       "class": "logging.StreamHandler",
-      "level": "INFO",
+      "level": "DEBUG",
       "formatter": "basic"
     },
     "file_info": {
@@ -27,7 +27,7 @@
     }
   },
   "loggers": {
-    "__main__": {
+    "pythonLogger": {
       "level": "DEBUG",
       "handlers": ["console", "file_info", "file_error"],
       "propagate": true

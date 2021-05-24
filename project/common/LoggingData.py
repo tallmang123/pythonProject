@@ -23,7 +23,7 @@ class LoggingData:
             # logging에서 기본 에러레벨은 WARNING
             # DEBUG < INFO < WARNING < ERROR < CRITICAL 순
             dirPath = os.path.dirname(os.path.realpath(__file__)).replace('\\', '/') + '/'
-            config = json.load(open(dirPath + '../config/logConfig.json'))
+            config = json.load(open(dirPath + '../config/logConfig.json','r'))
             logging.config.dictConfig(config)
         return cls.instance
 
@@ -31,6 +31,7 @@ class LoggingData:
     # init , new 중 new가 먼저 실행되어 객체를 메모리에 할당한 후에 init 진입
     def __init__(self):
         # 객체가 생성될때 log 경로 확인
+        self.logger = logging.getLogger('pythonLogger')
         log_path = '/Users/tallmang/Desktop/HIVE/pythonProject/logs'
         if not os.path.exists(log_path):
             os.mkdir(log_path)
@@ -54,8 +55,8 @@ class LoggingData:
 
         # logging
         if errorCode == ErrorCode.SUCCESS.errorCode:
-            logging.info(logData.__dict__)
+            self.logger.info(logData.__dict__)
         else:
-            logging.error(logData.__dict__)
+            self.logger.error(logData.__dict__)
 
         return
