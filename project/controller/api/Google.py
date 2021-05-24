@@ -38,7 +38,7 @@ def index():
 
 
 @app.route("/login")
-def login():
+def googleLogin():
     # Google 로그인 url 가져옴
     google_provider_cfg = get_google_provider_cfg()
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
@@ -88,14 +88,13 @@ def callback():
     email = userinfo_response.json().get("email")
     picture = userinfo_response.json().get("picture")
 
-    googleUser = GoogleUser(googleId, name,email, picture)
-    print("****************************************")
-    print(googleUser.__dict__)
+    googleUser = GoogleUser(googleId, name, email, picture)
     RedisLibrary().set(googleId, json.dumps(googleUser, default=lambda x: x.__dict__))
 
     login_user(googleUser)
     # 페이지 리다이렉트
-    return redirect(url_for("index"))
+    #return redirect(url_for("index"))
+    return redirect("http://localhost:3000/member")
 
 
 @app.route("/logout")
@@ -104,9 +103,10 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
-#로그인했던 유저 정보를 가져옴
-#기본 정보는 레디스에 저장했지만 UserMixin 자체는 Flask를 통해 메모리레 로드되어있는 상태이므로 Flask가 구동되는한 계속해서 유지됨.
-#Todo Flask가 종료되면 정보가 사라지기 때문에 처리 방식에 대한 다른 고민이 필요함
+
+# 로그인했던 유저 정보를 가져옴
+# 기본 정보는 레디스에 저장했지만 UserMixin 자체는 Flask를 통해 메모리레 로드되어있는 상태이므로 Flask가 구동되는한 계속해서 유지됨.
+# Todo Flask가 종료되면 정보가 사라지기 때문에 처리 방식에 대한 다른 고민이 필요함
 @login_manager.user_loader
 def load_user(googleId):
     print('*************user_loader' + googleId)

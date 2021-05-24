@@ -7,6 +7,7 @@ import First from './First';
 import Second from './Second';
 import Member from './Member';
 import AddData from './AddData';
+import Login from './Login';
 import axios from 'axios'
 import './lang/i18n';
 
@@ -14,10 +15,11 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 ReactDOM.render(
     <BrowserRouter>
-        <Route path='/first' component={ First } />
-        <Route path='/second' component={ Second } />
-        <Route path='/member' component={ Member } />
-        <Route path='/addData' component={ AddData } />
+        <Route path='/first'    component={ First } />
+        <Route path='/second'   component={ Second } />
+        <Route path='/member'   component={ Member } />
+        <Route path='/addData'  component={ AddData } />
+        <Route path='/login'    component={ Login } />
     </BrowserRouter>
     , document.getElementById('root')
 );

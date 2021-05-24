@@ -5,22 +5,11 @@ from project.common.AuthException import AuthException
 from project.common.ErrorCode import ErrorCode
 from project.service.AccountService import AccountService
 
-# request query string 파싱하여 type 및 해당 name에 맞는 값을 자동으로 변환하여 추가함. ( GET )
-requestGetParser = reqparse.RequestParser()
-requestGetParser.add_argument('User-Agent', type=str, location='header')  # get request header
-requestGetParser.add_argument('id', type=str, location='args')  # get request body ( Content-type = application/json 일때)
-
-# request body 파싱하여 type 및 해당 name에 맞는 값을 자동으로 변환하여 추가함. ( POST )
 requestPostParser = reqparse.RequestParser()
 requestPostParser.add_argument('User-Agent', type=str, location='header')  # get request header
 requestPostParser.add_argument('id', type=str, location='json')  # get request param ( get -> query string)
 requestPostParser.add_argument('password', type=str, location='json')
 
-# argument명이 동일하고 location만 달라 중복으로 사용하는 경우에 마지막 설정값으로 덮어씌워져서 이름을 다르게하거나 별도로 만들어야함.
-
-# response 형태 정의하여 marshal_with에 실어 보내면 자동으로 해당 정의 형태로 가공됨.
-# responseModel : 실제 사용하고자 하는 데이터 가공 객체
-# responseBody : 실제 응답에 필요한 데이터 가공 객체
 reponseModel = api.model('ResponseModel', {
     'Seq': fields.Integer,
     'Id': fields.String,
@@ -53,10 +42,11 @@ class Auth(Resource):
         if not userId or not password:
             raise AuthException(ErrorCode.INVALID_PARAMETER.errorCode, ErrorCode.INVALID_PARAMETER.errorMsg)
 
-        accountInfo = AccountService().getAccountInfoById(userId)
-        if accountInfo:
-            raise AuthException(ErrorCode.DUPLICATED_ACCOUNT.errorCode, ErrorCode.DUPLICATED_ACCOUNT.errorMsg)
+        accountInfo = AccountService().validateAccount(userId, password)
 
-        accountInfo = AccountService().addAccount(userId, password)
+        ##########################################
+        # Todo CREATE REDIS USER SESSION
+        ##########################################
+
         res = {'code': ErrorCode.SUCCESS.errorCode, 'msg': ErrorCode.SUCCESS.errorMsg, 'data': accountInfo}
         return res
