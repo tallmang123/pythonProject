@@ -14,7 +14,8 @@ class Login extends Component
         this.state = {
             account : '',
             password : '',
-            show:false
+            show:false,
+            errorMsg : ''
         }
     }
 
@@ -25,14 +26,14 @@ class Login extends Component
     }
 
     googleLogin = async() =>{
-        window.location.href = "http://localhost:5000/googleLogin";
+        window.location.href = "/googleLogin";
     }
 
     accountLogin = async() => {
         let {account,password} = this.state
         let md5 = require("md5");
 
-        let url = 'http://localhost:5000/auth/login';
+        let url = '/auth/login';
         //axios get
         axios.post(url,{
             id:account,
@@ -45,18 +46,18 @@ class Login extends Component
             }
         }).then((response) => { // success
             console.log(response)
-            this.setState({show: true});
+            window.location.href = "/member";
         })
         .catch((error) => { // fail
             console.log(error.response.data)
+            console.log(error.response.data.message)
+            this.setState({show: true, errorMsg: error.response.data.message});
         });
     }
 
     render(){
         const { t , i18n } = this.props;
-        const maxWidth = {
-            width:"100%"
-        };
+
         return (
         <Container fluid>
             <br/><br/><br/>
@@ -80,7 +81,7 @@ class Login extends Component
                                         </Col>
                                     </Form.Group>
                                     {this.state.show == true &&
-                                        <p style={{color:'red'}}>aaaaaaaa</p>
+                                        <p style={{color:'red'}}>* {this.state.errorMsg}</p>
                                     }
                                 </Form>
                                 <Button variant="primary" className="w-100" onClick={this.accountLogin}>{t('login')}</Button>

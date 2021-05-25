@@ -20,9 +20,9 @@ class Member extends Component {
     }
 
     getAccountData = async() => {
-        let url = 'http://localhost:5000/auth/info';
+
         //axios get
-        axios.get(url,{},
+        axios.get('/auth/info',{},
         {
             headers:
             {
@@ -37,10 +37,10 @@ class Member extends Component {
     }
 
     searchClick = async() => {
-        let url = 'http://localhost:5000/auth/info';
+
         let inputId = this.state.inputId
         //axios get
-        axios.get(url,
+        axios.get('/auth/info',
         {
            params:{
                 id:inputId

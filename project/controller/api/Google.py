@@ -21,23 +21,7 @@ login_manager.init_app(app)
 client = WebApplicationClient(app.config['GOOGLE_CLIENT_ID'])
 
 
-@app.route("/index")
-def index():
-    print(current_user)
-    if current_user.is_authenticated:
-        return (
-            "<p>{}님 어서오세요!! 로그인 되었습니다.! 당신의 이메일 : {}</p>"
-            "<div><p>당신의 구글 프로필 사진 : </p>"
-            '<img src="{}" alt="Google profile pic"></img></div>'
-            '<a class="button" href="/logout">로그아웃하기</a>'.format(
-                current_user.name, current_user.email, current_user.picture
-            )
-        )
-    else:
-        return '<a class="button" href="/login">클릭해서 구글 로그인하기</a>'
-
-
-@app.route("/login")
+@app.route("/googleLogin")
 def googleLogin():
     # Google 로그인 url 가져옴
     google_provider_cfg = get_google_provider_cfg()
@@ -53,7 +37,7 @@ def googleLogin():
     return redirect(request_uri)
 
 
-@app.route("/login/callback")
+@app.route("/googleLogin/callback")
 def callback():
     # 구글 oauth 인증 성공하여 code값 가져옴
     code = request.args.get("code")
@@ -93,11 +77,11 @@ def callback():
 
     login_user(googleUser)
     # 페이지 리다이렉트
-    #return redirect(url_for("index"))
+    # return redirect(url_for("index"))
     return redirect("http://localhost:3000/member")
 
 
-@app.route("/logout")
+@app.route("/googleLogout")
 @login_required
 def logout():
     logout_user()

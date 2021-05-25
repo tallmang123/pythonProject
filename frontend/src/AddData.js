@@ -46,9 +46,8 @@ class AddData extends Component {
             return false;
         }
 
-        let url = 'http://localhost:5000/auth/info';
         //axios get
-        axios.post(url,{
+        axios.post('/auth/info',{
             id:account,
             password:md5(password)
         },
