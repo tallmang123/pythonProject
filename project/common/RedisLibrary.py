@@ -20,3 +20,6 @@ class RedisLibrary:
 
     def set(self, key, data, expire=3600):
         return self.db.set(self.prefix + key, data, expire)
+
+    def delete(self, key):
+        return self.db.delete(self.prefix, key)

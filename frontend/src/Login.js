@@ -86,7 +86,7 @@ class Login extends Component
                                 </Form>
                                 <Button variant="primary" className="w-100" onClick={this.accountLogin}>{t('login')}</Button>
                                 <br/><br/>
-                                <Button variant="default" onClick={this.googleLogin}><Image src="./btn_google_signin1.png"/></Button>
+                                <Button variant="default" onClick={this.googleLogin}><Image src="./static/btn_google_signin1.png"/></Button>
                             </Card.Body>
                         </Card>
                     </Col>

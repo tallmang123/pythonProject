@@ -78,7 +78,7 @@ def callback():
     login_user(googleUser)
     # 페이지 리다이렉트
     # return redirect(url_for("index"))
-    return redirect("http://localhost:3000/member")
+    return redirect("/member")
 
 
 @app.route("/googleLogout")

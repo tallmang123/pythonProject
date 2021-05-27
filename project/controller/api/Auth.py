@@ -1,8 +1,16 @@
+import hashlib
+import json
+import requests
+from http import cookies
+
+from flask import make_response
+
 from app import api
 from flask_restx import fields, Resource, reqparse
 
 from project.common.AuthException import AuthException
 from project.common.ErrorCode import ErrorCode
+from project.common.RedisLibrary import RedisLibrary
 from project.service.AccountService import AccountService
 
 requestPostParser = reqparse.RequestParser()
@@ -34,7 +42,7 @@ class Auth(Resource):
 
     @api.expect(requestPostParser)  # request body parsing
     @api.marshal_with(responseBody)  # response model set
-    def post(self):
+    def post(self):  # 수동 로그인
         args = requestPostParser.parse_args()
         userId = args['id']
         password = args['password']
@@ -48,5 +56,14 @@ class Auth(Resource):
         # Todo CREATE REDIS USER SESSION
         ##########################################
 
-        res = {'code': ErrorCode.SUCCESS.errorCode, 'msg': ErrorCode.SUCCESS.errorMsg, 'data': accountInfo}
+        userSessionKey = hashlib.md5(userId.encode('utf-8')).hexdigest()
+
+        userSession = RedisLibrary().get(userSessionKey)
+        if userSession:
+            RedisLibrary().delete(userSessionKey)
+
+        RedisLibrary().set(userSessionKey, json.dumps(accountInfo.as_dict()))
+
+        res = {'code': ErrorCode.SUCCESS.errorCode, 'msg': ErrorCode.SUCCESS.errorMsg, 'data': accountInfo.as_dict()}
+
         return res

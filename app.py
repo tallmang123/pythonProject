@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_restx import Api
 from flask_cors import CORS
@@ -22,7 +22,7 @@ app.config.from_pyfile(configPath)  # Set Config
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
 # cors 이슈 해결
 # 현재 뷰 내 데이터 통신시 host가 아닌 다른 url로 호출하면 브라우저에서 이를 정책상 차단하여 정상적인 통신이 이루어지지 않아 해당 모듈 사용
-CORS(app)
+CORS(app, supports_credentials=True)
 
 # use flask_restx
 api = Api(app)
@@ -34,3 +34,6 @@ db = SQLAlchemy(app)
 from project.common import *
 from project.hook import *
 from project.controller.api import *
+from project.controller.process import *
+from project.controller.web import *
+

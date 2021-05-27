@@ -28,7 +28,8 @@ class AccountService:
 
     # get account info
     def validateAccount(self, userId, password):
-        accountInfo = AccountService().getAccountInfoById(userId)
+        accountInfo = Account.query.filter(Account.Id == userId).first()
+
         if not accountInfo:
             raise AuthException(ErrorCode.NO_ACCOUNT.errorCode, ErrorCode.NO_ACCOUNT.errorMsg)
 
