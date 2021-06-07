@@ -54,14 +54,6 @@ class Auth(Resource):
         accountInfo = AccountService().validateAccount(userId, password)
         userSessionKey = AccountService().setAccountSession(accountInfo['Id'], accountInfo)
 
-        #userSessionKey = hashlib.md5(userId.encode('utf-8')).hexdigest()
-
-        #userSession = RedisLibrary().get(userSessionKey)
-        #if userSession:
-        #    RedisLibrary().delete(userSessionKey)
-
-        #RedisLibrary().set(userSessionKey, json.dumps(accountInfo.as_dict()))
-
         res = {'code': ErrorCode.SUCCESS.errorCode, 'msg': ErrorCode.SUCCESS.errorMsg, 'data': accountInfo.as_dict()}
 
         # set cookie
