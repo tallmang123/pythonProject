@@ -11,6 +11,7 @@ from flask_login import (
 )
 from oauthlib.oauth2 import WebApplicationClient
 from project.common.RedisLibrary import RedisLibrary
+from project.service.AccountService import AccountService
 from project.vo.GoogleUser import GoogleUser
 
 import requests
@@ -75,14 +76,12 @@ def callback():
     picture = userinfo_response.json().get("picture")
 
     googleUser = GoogleUser(googleId, name, email, picture)
-    userSessionKey = hashlib.md5(googleId.encode('utf-8')).hexdigest()
-    RedisLibrary().set(userSessionKey, json.dumps(googleUser, default=lambda x: x.__dict__))
+    userSessionKey = AccountService().setAccountSession(googleId, googleUser)
 
     login_user(googleUser)
     # 페이지 리다이렉트
     # return redirect(url_for("index"))
 
-    userSessionKey = hashlib.md5(googleId.encode('utf-8')).hexdigest()
     resp = make_response(redirect("/member"))
     resp.set_cookie('userID', userSessionKey)
     return resp
@@ -102,7 +101,8 @@ def logout():
 @login_manager.user_loader
 def load_user(googleId):
     print('*************user_loader' + googleId)
-    jsonData = RedisLibrary().get(googleId)
+    userSessionKey = hashlib.md5(googleId.encode('utf-8')).hexdigest()
+    jsonData = RedisLibrary().get(userSessionKey)
     if jsonData is not None:
         jsonData = json.loads(jsonData)
     return GoogleUser.as_payload(jsonData)
