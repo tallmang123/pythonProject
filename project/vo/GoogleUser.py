@@ -11,3 +11,5 @@ class GoogleUser(UserMixin):
     def as_payload(jsonData):
         return GoogleUser(jsonData['id'], jsonData['name'], jsonData['email'], jsonData['picture'])
 
+    def as_dict(self):
+        return self.__dict__

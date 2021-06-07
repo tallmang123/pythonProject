@@ -13,11 +13,6 @@ module.exports = {
         path:path.resolve(__dirname, "../static")
     },
     module :{ //webpack은 자바스크립트만 인식학 때문에 프론트에서 사용되는 css,img 등의 파일들도 자바스크립트에서 인식할 수 있도록 변경.
-        devServer: {
-            proxy: {
-                target: 'http://localhost:5000',
-            },
-        },
         rules : [
             {
                 test: /\.(sa|sc|c)ss$/, // 파일 타입

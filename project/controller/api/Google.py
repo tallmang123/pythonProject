@@ -1,4 +1,6 @@
-from flask import redirect, request, url_for
+import hashlib
+
+from flask import redirect, request, url_for, make_response
 from app import app
 from flask_login import (
     LoginManager,
@@ -9,6 +11,7 @@ from flask_login import (
 )
 from oauthlib.oauth2 import WebApplicationClient
 from project.common.RedisLibrary import RedisLibrary
+from project.service.AccountService import AccountService
 from project.vo.GoogleUser import GoogleUser
 
 import requests
@@ -73,12 +76,16 @@ def callback():
     picture = userinfo_response.json().get("picture")
 
     googleUser = GoogleUser(googleId, name, email, picture)
-    RedisLibrary().set(googleId, json.dumps(googleUser, default=lambda x: x.__dict__))
+    userSessionKey = AccountService().setAccountSession(googleId, googleUser)
 
     login_user(googleUser)
     # 페이지 리다이렉트
     # return redirect(url_for("index"))
-    return redirect("/member")
+
+    resp = make_response(redirect("/member"))
+    resp.set_cookie('userID', userSessionKey)
+    return resp
+    # return redirect("/member")
 
 
 @app.route("/googleLogout")

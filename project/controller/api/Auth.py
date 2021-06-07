@@ -41,7 +41,8 @@ responseBody = api.model('ResponseBody', {
 class Auth(Resource):
 
     @api.expect(requestPostParser)  # request body parsing
-    @api.marshal_with(responseBody)  # response model set
+    #cookie 저장을 위해 make_response사용하게 되면 model set 이 적용되지 않아 주석처리
+    #@api.marshal_with(responseBody)  # response model set
     def post(self):  # 수동 로그인
         args = requestPostParser.parse_args()
         userId = args['id']
@@ -51,19 +52,20 @@ class Auth(Resource):
             raise AuthException(ErrorCode.INVALID_PARAMETER.errorCode, ErrorCode.INVALID_PARAMETER.errorMsg)
 
         accountInfo = AccountService().validateAccount(userId, password)
+        userSessionKey = AccountService().setAccountSession(accountInfo['Id'], accountInfo)
 
-        ##########################################
-        # Todo CREATE REDIS USER SESSION
-        ##########################################
+        #userSessionKey = hashlib.md5(userId.encode('utf-8')).hexdigest()
 
-        userSessionKey = hashlib.md5(userId.encode('utf-8')).hexdigest()
+        #userSession = RedisLibrary().get(userSessionKey)
+        #if userSession:
+        #    RedisLibrary().delete(userSessionKey)
 
-        userSession = RedisLibrary().get(userSessionKey)
-        if userSession:
-            RedisLibrary().delete(userSessionKey)
-
-        RedisLibrary().set(userSessionKey, json.dumps(accountInfo.as_dict()))
+        #RedisLibrary().set(userSessionKey, json.dumps(accountInfo.as_dict()))
 
         res = {'code': ErrorCode.SUCCESS.errorCode, 'msg': ErrorCode.SUCCESS.errorMsg, 'data': accountInfo.as_dict()}
 
-        return res
+        # set cookie
+        resp = make_response(res)
+        resp.set_cookie('userID', userSessionKey)
+
+        return resp

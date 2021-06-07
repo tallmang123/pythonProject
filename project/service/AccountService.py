@@ -1,6 +1,9 @@
 # 비즈니스 로직
+import json
+
 from project.common.ErrorCode import ErrorCode
 from project.common.AuthException import AuthException
+from project.common.RedisLibrary import RedisLibrary
 from project.vo.Account import Account
 import uuid
 import datetime
@@ -42,3 +45,16 @@ class AccountService:
             raise AuthException(ErrorCode.PASSWORD_MISMATCH.errorCode, ErrorCode.PASSWORD_MISMATCH.errorMsg)
 
         return accountInfo
+
+    def setAccountSession(self, userKey, accountInfo):
+
+        userSessionKey = hashlib.md5(userKey.encode('utf-8')).hexdigest()
+
+        userSession = RedisLibrary().get(userSessionKey)
+        if userSession:
+            RedisLibrary().delete(userSessionKey)
+
+        RedisLibrary().set(userSessionKey, json.dumps(accountInfo.as_dict()))
+
+        return userSessionKey
+
